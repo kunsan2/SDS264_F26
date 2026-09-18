@@ -3,14 +3,12 @@ title: 'Review of Data Science 1'
 author: 'Namgyal Kunsang'
 format:
   html: default
+  pdf: default
 editor_options: 
   chunk_output_type: console
 ---
 
 You can download this .qmd file from [here](https://github.com/proback/264_fall_2026/blob/main/01_review164.qmd).  Just hit the Download Raw File button.
-
-go my lala. 
-
 
 ### Determinants of COVID vaccination rates
 
@@ -213,10 +211,10 @@ vaccine_data |>
    ggplot(mapping = aes(x = as.factor(rural_urban_code),
                         fill = perc_complete_vac > 50)) +
             geom_bar(position = "fill") +
-  labs(x = "Rural to Urban Scale",
+  labs(x = "Urban to Rural Scale",
        y = "Proportion of Complete Vaccinations over 50%",
        fill = "Complete Vaccinations over 50%",
-       title = "Rural to Urban Regions and the Proportion of Complete Vaccinations")
+       title = "Urban to Rural Regions and the Proportion of Complete Vaccinations")
 ```
 
 ```{r}
@@ -231,6 +229,7 @@ State your favorite plot, why you like it better than the other two, and what yo
 
 My favorite plot was the segmented bar chart because I felt it was personally the most readable of the graphs. I can see the county with the least complete vaccinations.
 
+This is a segmented bar graph showing the proportion of regions with at least 50% complete vaccinations and ordered based on how rural and urban they are. The X axis is measured on the urban to rural scale, a discrete range going from 1 to 9, with 1 being the most urban region, and 9 being the most rural region. The Y axis displays the proportion of complete vaccinations over 50%, where the proportions range from 0 to 1 and goes up in intervals of 0.25. The graph is segmented by two colors showing that a given urban to rural area on the X axis had a certain proportion of complete vaccinations that it is scaled to on the Y axis. From the graph, the most urban regions had the highest proportion of regions with vaccinations over 50%, at around 58%. The rest of the graph shows an overall trend of decreased vaccination rates the higher the regions scored on the urban to rural scale, with the regions on the eighth section reaching the lowest of around 20% having at least half of the population vaccinated. 
 
 
 
@@ -342,8 +341,6 @@ If we removed group_by(MD_group) then there would be a lot more rows in the tibb
 
 9. Hypothetical R chunk #2:
 
-
-
 ```{r}
 #| eval: false
 
@@ -366,6 +363,7 @@ vaccine_data |>
 ```
 
 a) Why would the first plot produce an error?
+
 The aesthetics mapping is only sent to the geom_point function, when it should have been either copied into the geom_smooth again or just put in the ggplot to begin with. Geom_smooth only has the data to read. 
 
 
@@ -374,6 +372,7 @@ b) Describe the tibble `temp` created above.  What would be the dimensions?  Wha
 Arranged the rows by count of how many people align with each party in descending order. Then the first 3 rows of people has been selected, so there are 3 rows. There are 2 columns, one for var1 and one for the HR_party. (3 by 2 tibble.) The first row has the most number of people in the political party, the second has the second most, and the third has the third most. 
 
 c) What would happen if we replaced `fct_reorder(HR_party, perc_over_65, .fun = median)` with `HR_party`?
+
 The data would stay at its default status and wouldn't be leveled in order of ascending percentages over 65. 
 
 
@@ -403,10 +402,12 @@ Five rows created by the fct_lump. The four most common states have been preserv
 
 b) Carefully describe the plot created above.
 
-The plot [write alt text]
+The plot created is a line graph with data points being mapped on the x axis by the Urban to Rural scale, which goes from 1-9 (1 being the most urban, 9 being the most rural), and on the y axis it is ranked by the mean number of people per medical doctor. There would be 9 points made for each line, and 5 lines made total, because the urban rural scale groups together the data by how rural and urban the region is, and the state_lump function has kept 4 of the most common states with the fifth being the remaining states grouped together. Each line will be colored by state and then the lines will be ordered by the largest mean people per doctor associated with the highest rural urban code, letting the colors match the legend. 
 
 c) What would happen if we removed `filter(!is.na(people_per_MD))`?
+
 If we removed the filter, then the mean_people_per_MD would appear as an NA value because there would be an NA value that R can't do operations with. The ggplot would not be able to be plotted because of the NA value. 
 
 d) What would happen if we replaced `fct_reorder2(state_lump, rural_urban_code, mean_people_per_MD)` with `state_lump`?
+
 If we removed the fct_reorder2 and put state_lump instead, the colors of rural_urban_code and mean_people_per_MD wouldn't be ordered by the ranked values of state_lump and would just be categorized randomly. 
