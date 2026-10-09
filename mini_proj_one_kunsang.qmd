@@ -1,0 +1,165 @@
+---
+title: "Mini Project 1: Lyrics Analysis"
+author: "Namgyal Kunsang"
+format: pdf
+editor_options: 
+  chunk_output_type: console
+editor: 
+  markdown: 
+    wrap: 72
+---
+proj tips: 
+- just need to submit a github url! 
+   - contains data, R code, PDF 
+   - if private, add proback as a collaborator 
+   - try to push NOW 
+- looking for csv file of regular data 
+    - write_csv(mytibble, "mytibble.csv") 
+- try to remove code chunks. 
+
+- r chunk options: 
+        echo: FALSE -> show output but not code 
+     include: FALSE -> run code, no output, don't show code 
+        eval: FALSE -> shows code, don't run 
+     message: FALSE -> hides warnings and other messages 
+     warning: FALSE -> hides warnings and other messages
+
+USE Code Comments to highlight elements included; use # for a header and ## for a subheader outside of R chunks. 
+git config --global user.name "YOUR USER NAME"
+git config --global user.email "YOUR EMAIL ASSOCIATED WITH GITHUB"
+
+
+```{r}
+#| include: FALSE
+
+# Installing all packages I might need or reference. 
+library(tidyverse)
+library(tidytext)
+library(textdata)
+library(wordcloud)
+library(wordcloud2)
+library(viridis)
+library(ggthemes)
+library(gutenbergr)
+library(credentials)
+# install.packages("remotes")
+remotes::install_github("bwalsh5/lyricsr")
+library(lyricsr)
+
+```
+
+Your analysis must contain the following elements:
+
+- at least 3 different str_ functions
+str_remove_all, str_count
+
+- at least 3 different regular expressions
+
+regex for finding word boundaries, word counts
+
+- at least 2 different text analysis applications (*count words, bing
+  sentiment, afinn sentiment, nrc sentiment, wordclouds, trajectories
+  over sections or time, tf-idf, bigrams, correlations, networks, LDA,
+  etc*.).
+  
+count words
+sentiment
+trajectories
+
+*Note that many interesting insights can be gained by strategic and
+thoughtful use of regular expressions paired with simple counts and
+summary statistics.*
+
+- at least 3 illustrative, well-labeled plots or tables, **one of which
+  is described with alt-text using the Four Ingredients Model**
+
+- a description of what insights can be gained from your plots and
+  tables.
+
+*Be sure you weave a compelling and interesting story!*
+
+```{r}
+#| include: FALSE
+get_sentiments(lexicon = "afinn")
+get_sentiments(lexicon = "nrc")
+get_sentiments(lexicon = "bing")
+
+bing_sentiments <- get_sentiments(lexicon = "bing")
+afinn_sentiments <- get_sentiments(lexicon = "afinn")
+nrc_sentiments <- get_sentiments(lexicon = "nrc")
+```
+
+Try for 20 ish songs.
+
+```{r}
+#| echo: FALSE
+pop_songs <- search_genre("pop", max_songs = 20)
+```
+
+```{r}
+# base code off of this
+
+tester <- pop_songs |>
+  mutate(line = row_number()) |>
+  mutate(
+    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]")) |>
+  unnest_tokens(word, lyrics_altered, token = "words") 
+
+  tidy_2gram <- pop_songs |>
+    mutate(line = row_number()) |>
+  mutate(
+    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]")) |>
+  unnest_tokens(bigram, lyrics_altered, token = "ngrams", n = 2) |>
+  filter(bigram != "NA")
+
+tidy_2gram
+
+```
+
+
+
+```{r}
+pop_songs |>
+  mutate(
+    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]"),
+    num_words = str_count(lyrics_altered, "\\b[^ ]+\\b")
+    ) |>
+  select(title, artist, num_words) |>
+  arrange(num_words) 
+```
+
+
+```{r}
+# Calling in stopwords data from the package as well as smart stopwords
+stopwords <- get_stopwords()
+smart_stopwords <- get_stopwords(source = "smart")
+
+
+new_songs <- pop_songs |>
+  mutate(line = row_number()) |>
+# Removing instances of [bracketed text] from word list 
+  mutate(
+    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]")) |>
+# Splits new lyrics column to be a word per row 
+  unnest_tokens(word, lyrics_altered, token = "words") |>
+  count(word, sort = TRUE) |>  # Counting words and sorting max to min
+  anti_join(smart_stopwords) |>
+  slice_max(n, n = 20) 
+
+# Making the plot 
+new_songs |>
+  ggplot(
+    aes(fct_reorder(word, n), 
+             n, 
+             fill = word)
+    ) +
+    geom_col() +
+    coord_flip() + 
+      scale_fill_viridis(discrete = TRUE, 
+                         guide = "none") +
+      theme_clean()
+```
+
+
+
+
