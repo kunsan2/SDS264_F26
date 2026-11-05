@@ -2,32 +2,21 @@
 title: "Mini Project 1: Lyrics Analysis"
 author: "Namgyal Kunsang"
 format: pdf
+fig_caption: TRUE
 editor_options: 
   chunk_output_type: console
 editor: 
   markdown: 
     wrap: 72
 ---
-proj tips: 
-- just need to submit a github url! 
-   - contains data, R code, PDF 
-   - if private, add proback as a collaborator 
-   - try to push NOW 
-- looking for csv file of regular data 
-    - write_csv(mytibble, "mytibble.csv") 
-- try to remove code chunks. 
 
-- r chunk options: 
-        echo: FALSE -> show output but not code 
-     include: FALSE -> run code, no output, don't show code 
-        eval: FALSE -> shows code, don't run 
-     message: FALSE -> hides warnings and other messages 
-     warning: FALSE -> hides warnings and other messages
+# Pop Songs: A Glance into Mainstream Culture  
 
-USE Code Comments to highlight elements included; use # for a header and ## for a subheader outside of R chunks. 
-git config --global user.name "YOUR USER NAME"
-git config --global user.email "YOUR EMAIL ASSOCIATED WITH GITHUB"
+Throughout history, music has been an essential part of human culture. Each generation of people have had their own sets of melodies and tunes that are invaluable for analyzing what the current values of a society are. A simple way to analyze these values is to take a look at the most popular styles of music at the time, and there's no better genre to do it with than pop. 
 
+Pop is known for appealing to the broadest audience, with the name of the genre likely being short for 'popular'. It came into the world sometime around the 1950s initially as rock music aimed at a more adolescent demographic, but it later transformed into the more fun, catchy, and marketable form we see today. 
+
+Through using the `lyricsr` package developed by [Brian Walsh](https://github.com/bwalsh5/lyricsr.git), we can easily do text analyses for some of the most popular songs in the most popular genre all stored within the website [Genius](https://genius.com/). 
 
 ```{r}
 #| include: FALSE
@@ -36,11 +25,8 @@ git config --global user.email "YOUR EMAIL ASSOCIATED WITH GITHUB"
 library(tidyverse)
 library(tidytext)
 library(textdata)
-library(wordcloud)
-library(wordcloud2)
 library(viridis)
 library(ggthemes)
-library(gutenbergr)
 library(credentials)
 # install.packages("remotes")
 remotes::install_github("bwalsh5/lyricsr")
@@ -48,38 +34,9 @@ library(lyricsr)
 
 ```
 
-Your analysis must contain the following elements:
-
-- at least 3 different str_ functions
-str_remove_all, str_count
-
-- at least 3 different regular expressions
-
-regex for finding word boundaries, word counts
-
-- at least 2 different text analysis applications (*count words, bing
-  sentiment, afinn sentiment, nrc sentiment, wordclouds, trajectories
-  over sections or time, tf-idf, bigrams, correlations, networks, LDA,
-  etc*.).
-  
-count words
-sentiment
-trajectories
-
-*Note that many interesting insights can be gained by strategic and
-thoughtful use of regular expressions paired with simple counts and
-summary statistics.*
-
-- at least 3 illustrative, well-labeled plots or tables, **one of which
-  is described with alt-text using the Four Ingredients Model**
-
-- a description of what insights can be gained from your plots and
-  tables.
-
-*Be sure you weave a compelling and interesting story!*
-
 ```{r}
 #| include: FALSE
+#Calling sentiment libraries
 get_sentiments(lexicon = "afinn")
 get_sentiments(lexicon = "nrc")
 get_sentiments(lexicon = "bing")
@@ -87,54 +44,81 @@ get_sentiments(lexicon = "bing")
 bing_sentiments <- get_sentiments(lexicon = "bing")
 afinn_sentiments <- get_sentiments(lexicon = "afinn")
 nrc_sentiments <- get_sentiments(lexicon = "nrc")
-```
 
-Try for 20 ish songs.
-
-```{r}
-#| echo: FALSE
-pop_songs <- search_genre("pop", max_songs = 20)
-```
-
-```{r}
-# base code off of this
-
-tester <- pop_songs |>
-  mutate(line = row_number()) |>
-  mutate(
-    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]")) |>
-  unnest_tokens(word, lyrics_altered, token = "words") 
-
-  tidy_2gram <- pop_songs |>
-    mutate(line = row_number()) |>
-  mutate(
-    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]")) |>
-  unnest_tokens(bigram, lyrics_altered, token = "ngrams", n = 2) |>
-  filter(bigram != "NA")
-
-tidy_2gram
-
-```
-
-
-
-```{r}
-pop_songs |>
-  mutate(
-    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]"),
-    num_words = str_count(lyrics_altered, "\\b[^ ]+\\b")
-    ) |>
-  select(title, artist, num_words) |>
-  arrange(num_words) 
-```
-
-
-```{r}
 # Calling in stopwords data from the package as well as smart stopwords
 stopwords <- get_stopwords()
 smart_stopwords <- get_stopwords(source = "smart")
+```
 
+## Our 20 Songs
 
+Obviously it would take a lot of computational effort to parse through the entirety of the pop genre, so this analysis will focus on a small portion of that amount. Using the `search_genre()` function, that allows us to search for any genre we want, we are able collect the first 20 most popular songs from the Genius genre tag page for 'pop'. 
+
+```{r}
+#| echo: FALSE
+# showing the 20 songs we are working with 
+pop_songs <- search_genre("pop", max_songs = 20)
+```
+
+*Voila!*
+
+## Word Count?
+
+Looking at these 20 songs, we can hypothesize there might be a correlation between word count and popularity. After all, if pop songs tend to be the most uniform genre that appeals to everyone, shouldn't every song sound roughly similar? 
+
+But after running the code...
+
+```{r, fig.cap = "The word count across 20 pop songs, sorted by year of songs was written. There is a noticeable song in the year 2002 where the word count exceeds over 600, but generally songs tend to fall within the 300 to 500 range."}
+#| warning: FALSE
+#| echo: FALSE
+
+# collects first 20 most popular songs from Genius page 'pop'
+pop_songs |>
+  mutate(
+    # Reg. Ex 1
+    # Str_ Function 1 
+    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]"),
+    # Reg. Ex 2
+    # Str_ Function 2
+    # Text Analysis App. 1
+    num_words = str_count(lyrics_altered, "\\b[^ ]+\\b"),
+    # Str_ Function 3
+    year = str_sub(release_date, 1, 4)
+    ) |>
+  select(title, artist, num_words, year) |>
+  group_by(year) |> #sorting by year
+  arrange(year) |>
+# graphing to show word ct 
+# Visualization 1
+  ggplot(
+    aes(x = year,
+        y = num_words)
+  ) +
+    geom_boxplot(aes(color = year), 
+                 show.legend = FALSE) +
+  labs(x = "Word Count",
+       y = "Year", 
+       title = "Word Count across 20 Pop Songs",
+       caption = "Data retrieved from Genius Lyrics.") +
+      scale_color_viridis(discrete = TRUE, 
+                         guide = "none") +
+      theme_clean()
+```
+
+It doesn't look like there's much commonality between word count and the pop songs, or even a trend across years. Taking a closer look at the strange song at 2002 with 638 words, it appears to be 'Without Me' by Eminem. 
+
+Well, Eminem is a rapper, so maybe it's because rap tends to have more words overall compared to most other types of music? But 'God's Plan' by Drake as  '1-800-273-8255' by Logic also fall into the rap category, and have 300 and 482 words respectively. The other song in 2017 with a word count over 600? Why, it's 'Shape of You' by Ed Sheeran, which is decidedly not rap. 
+
+On the opposite end of the speechiness scale is Lady Gaga's 'Shallow', which is more of a country ballad at 157 words. So there doesn't seem to be a definitive happy medium for pop songs within our net of 20 songs. 
+
+## But what were the most used words?
+
+Pop is a very, VERY repetitive genre. The bulk of its profitability comes from being catchy, and being able to stick like glue onto the walls of your brain becomes easy when half of the song repeats the same few words over and over again. 
+
+First, we have to be sure to use the `get_stopwords()` function from the `tidytext` package in order to fully count the most popular words. Without it, words like 'the' and 'you' and 'and' would overpopulate the data. So, we focused on the 20 most common words that appear across all 20 of these pop songs, and we found...
+
+```{r}
+#| include: FALSE
 new_songs <- pop_songs |>
   mutate(line = row_number()) |>
 # Removing instances of [bracketed text] from word list 
@@ -142,11 +126,16 @@ new_songs <- pop_songs |>
     lyrics_altered = str_remove_all(lyrics, "\\[.+\\]")) |>
 # Splits new lyrics column to be a word per row 
   unnest_tokens(word, lyrics_altered, token = "words") |>
-  count(word, sort = TRUE) |>  # Counting words and sorting max to min
+# Counting words and sorting max to min
+  count(word, sort = TRUE) |>  
   anti_join(smart_stopwords) |>
-  slice_max(n, n = 20) 
+  slice_max(n, n = 20)
+```
 
+```{r,  fig.cap = "The 20 most commonly used words in 20 pop songs sorted by most to least frequent. 'Ha' has the highest count of 172, surpassing 'baby' by over 50 appearances.", fig.alt="This is a horizontal bar chart of 20 common words in the top 20 pop songs of Genius Lyrics excluding stopwords. On the X axis is the count of appearances of words across all 20 songs, ranging from 0 to 172. On the Y axis, there are 20 different words. From most to least common, the words are ha, baby, yeah, love, work, la, time, wanna, na, ah, good, wishin, dirt, learn, mine, feel, pain, ooh, life, and body. Most words on this list have under 50 appearances across all the songs, but the words work, love, yeah, baby, and ha are all at least over 80 occurrences. The data was retrieved from Genius Lyrics."}
+#| echo: FALSE
 # Making the plot 
+# Visualization 2, alt text
 new_songs |>
   ggplot(
     aes(fct_reorder(word, n), 
@@ -157,9 +146,156 @@ new_songs |>
     coord_flip() + 
       scale_fill_viridis(discrete = TRUE, 
                          guide = "none") +
-      theme_clean()
+    labs(title = "20 Common Words in 20 Pop Songs",
+       subtitle = "Excluding Stopwords",
+       caption = "Data retrieved from Genius Lyrics.",
+       x = "Words",
+       y = "Count") +
+    theme_clean()
 ```
 
+That is a lot of 'ha's. 172 of them, in fact! The second most common is 'baby' at exactly 100, which makes a lot of sense if pop songs tend to be more focused on romance. 
 
+## Now how many times does a word repeat after itself? 
 
+```{r}
+#| echo: FALSE
+# Finding number of times a word repeats after itself
+pop_songs |>
+  mutate(line = row_number()) |>
+  mutate(
+    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]")) |>
+  mutate(lyrics_altered = str_to_lower(lyrics_altered)) |>
+  mutate(doubled = str_count(string = lyrics_altered, 
+  # Reg. Ex 3
+         pattern = "\\b(.+)\\b\\1")) |>
+  select(title, doubled)
+```
 
+Well, that makes sense. 'Starboy' is the primary source for the staggering 172 'ha's, while 'Work' and 'Baby' repeat the title of the song over and over.  
+
+## Bigrams and Term Frequency Distribution 
+
+Let's now take a look at bigrams, which are pairs of 2 words next to each other. For example: in 'the quick brown fox', we would have 3 different bigrams of 'the quick', 'quick brown', and 'brown fox'. The amount of bigrams increases with the length of a given text. In order to look deeper into repetition within pop songs, bigrams are a useful tool.
+
+But something else we can do with bigrams is find the term frequency-inverse document frequency (tf-idf) of phrases (bigrams) for a given song. The 'tf-idf' is a complicated way of saying we want to calculate the most important bigrams for each songs. 
+
+Looking at our tf-idf distibution across each song, we find...
+
+```{r}
+#| include: FALSE
+# Making Bigrams to analyze sentiment
+# Text Analysis App. 2
+tidy_2gram <- pop_songs |>
+  mutate(
+      line = row_number()
+      ) |>
+  mutate(
+      lyrics_altered = str_remove_all(lyrics, "\\[.+\\]")
+    ) |>
+  unnest_tokens(bigram, lyrics_altered, token = "ngrams", n = 2) |>
+  filter(bigram != "NA") 
+
+# filtering bigrams into 2 cols; counting occurrences
+bigrams_filter <- tidy_2gram |>
+  separate(bigram, c("word1", "word2"), sep = " ") |>
+  filter(!word1 %in% stopwords$word,
+         !word2 %in% stopwords$word) |>
+  count(word1, word2, sort = TRUE)
+
+```
+
+```{r}
+#| include: FALSE
+# Dividing bigrams by tf-idf distribution
+# Text Analysis App. 3
+bigram_tf_idf <- tidy_2gram |>
+  count(title, bigram) |>
+  bind_tf_idf(bigram, title, n) |>
+  arrange(desc(tf_idf)) 
+
+```
+
+```{r, fig.align = "center", fig.height = 10, fig.width = 14, fig.cap = "The most commonly used bigrams in 20 pop songs sorted by most to least frequent. 'Ha ha' has the highest term frequency of any bigrams."}
+#| echo: FALSE
+# Creating figure for tf idf distribution 
+bigram_tf_idf |>
+  group_by(title) |>
+  arrange(desc(tf_idf)) |>
+  # Only include top 5 bigrams per song
+  slice_max(tf_idf, n = 5) |>
+  ungroup() |>
+# Visualization 3
+  ggplot(aes(x = fct_reorder(bigram, tf_idf), 
+             y = tf_idf, 
+             fill = title)) +
+    geom_col(show.legend = FALSE) +
+    coord_flip() +
+    facet_wrap(~title, scales = "free") +
+  labs(x = "TF-IDF Distribution",
+       y = "Bigrams",
+       title = "Term Frequency of 2-Word Phrases in 20 Pop Songs",
+       subtitle = "Excluding Stopwords",
+       caption = "Data retrieved from Genius Lyrics.") +
+  theme_clean()
+```
+
+From looking at the figure, 'Starboy' confirms our previous observation that 'ha ha' is repeated very often wthin the song. 'Without Me' appears to have the least amount of essential repeated phrases, with 'Shallow' by Lady Gaga coming in second with low tf-idf scores. We can see that these songs tend to have at least one relatively common repeating bigram that is 'very important' to the song, and that serves to confirm that pop songs rely on having a certain number of catchy phrases for people to remember them by. 
+
+## Sentiment Trajectory 
+
+Finally, let's look at a sentiment trajectory of 4 songs within the pop songs list. For this case I chose 'Shape of You', 'Without Me', 'Bohemian Rhapsody', and 'God's Plan', which are the first 4 songs in the list of pop songs, excluding the Despacito Remix. The choice to exclude Despacito was because the sentiment dictionary (bing sentiments) is intended for English words, and a good portion of Despacito is in Spanish. It would not serve as a very useful comparison to the other 3 songs if it was included.
+
+That being said, by categorizing each word of the song into positive and negative groups depending on how they are labeled in the sentiment dictionary, we find that... 
+
+```{r}
+#| include: FALSE
+# Finding the sentiment trajectory of 4 songs
+# Text Analysis App. 4
+indiv_words <- pop_songs |>
+  mutate(
+    lyrics_altered = str_remove_all(lyrics, "\\[.+\\]")) |>
+  unnest_tokens(word, lyrics_altered, token = "words") |>
+  select(title, artist, word) |>
+  # need to use group_by so the line count resets every song
+  group_by(title) |>  
+  mutate(line = row_number()) |>
+  ungroup() |>
+  filter(title == "Shape of You" | title == "Without Me" | title == "Bohemian Rhapsody" | title == "God’s Plan")
+  
+```
+
+```{r, fig.align = "center", fig.height = 8, fig.width = 12, fig.cap = "The sentiment trajectory across the top 4 most popular pop songs. There is no apparent overlap between mood trajectory even across pop songs."}
+#| echo: FALSE
+#| message: FALSE
+# Creating figure for sent. trajectory
+indiv_words |>
+  inner_join(bing_sentiments) |>
+  # Making 8 words count as one line within an index
+  count(title, index = line %/% 14, sentiment) |>
+# index approximates parts of song (14 words = 1 line)
+  pivot_wider(names_from = sentiment, values_from = n, values_fill = 0) |>
+  mutate(sentiment = positive - negative) |>
+# Visualization 4
+  ggplot(aes(x = index, y = sentiment, fill = title)) +
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~title, ncol = 2, scales = "free_x") +
+  labs(x = "Song Length",
+       y = "Sentiment",
+       title = "Sentiment Trajectory over Top 4 Pop Songs",
+       subtitle = "Excluding Stopwords",
+       caption = "Data retrieved from Genius Lyrics.") +
+  scale_fill_viridis_d()
+```
+
+Bohemian Rhapsody and God's Plan are mostly negative songs, Shape of You is a primarily happy song, and Without Me has more negative moments but experiences a lot of fluctuation over the course of the song. What does that tell us? There doesn't seem to be much commonality among the feelings each song is trying to portray to the listener. Maybe there's a lesson to be learned in that?
+
+## Closing Thoughts: What does it all mean?
+
+After all this text analysis, we have come to a striking conclusion: pop is a very un-uniform genre. Every pop song has some different aspect to it that can easily appeal to anyone without specifying any group in particular, which is what makes it such a popular genre! The only factor that seems to be a common trait among pop songs is how much they love repeating phrases again and again. 
+
+```{r}
+#| include: FALSE 
+write_csv(pop_songs, "proj_one_songs.csv") 
+write_csv(bigram_tf_idf, "proj_one_bigram.csv") 
+```
