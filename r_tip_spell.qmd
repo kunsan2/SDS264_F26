@@ -1,0 +1,293 @@
+---
+title: "R Tip of the Day: Spelling"
+author: "Namgyal Kunsang"
+date: "2026-11-5"
+format:
+  revealjs: 
+    slide-number: true
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    logo: images/quarto.png
+    css: styles.css
+    footer: <https://cran.r-project.org/web/packages/spelling/index.html>
+resources:
+  - demo.pdf
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| message: FALSE
+#| warning: FALSE
+#| include: FALSE
+
+library(tidyverse)
+library(gutenbergr)
+library(spelling)
+
+user_spellpkg <- find.package("spelling")
+spell_check_package(pkg = user_spellpkg)
+spell_check_setup(pkg = user_spellpkg)
+guten_path <- find.package("gutenbergr")
+
+text_vec <- c("the", "quck", "brown", "jumped", "over", "the", "laziy", "dog")
+
+saved_data <- "C:\\Users\\nkuns\\OneDrive\\Documents\\SDS_F26_Namgyal\\SDS264_F26\\r_tip_spell_files\\spellcheck_this.txt"
+
+spellcheck_this <- read.delim("spellcheck_this.txt", header = FALSE)
+
+us_words <- c("color", "savor", "favorite", "honor", "airplane", "jewelry")
+
+ex_string <- "My name is Namgyal Kunsang, and I'm a student at Saint Olaf College! It is raining a lot this week. I wonder when it's going to snow?"
+
+```
+
+
+## Spelling 
+
+The `spelling` package is a useful tool if you want to double-check a body of text 
+for any spelling errors that could impede how it runs. 
+
+::: {.fragment .fade-in}
+`Useful Functions:`
+:::
+
+:::{style = "font-size: 70%;"}
+::: incremental
+
+-   spell_check_text(), 
+    -   spell_check_files()
+-   spell_check_package()
+    -   spell_check_setup()
+-   get_wordlist()
+    -   update_wordlist()
+    
+:::
+:::
+
+::: footer
+More information: [Spelling Documentation](https://cran.r-project.org/web/packages/spelling/index.html
+)
+:::
+
+## Arguments {auto-animate="true" auto-animate-easing="ease-in-out"}
+
+::: incremental
+-   `pkg`: Path to package's 'root directory'
+-   `vignettes`: default FALSE, spellchecks vignettes of a given package
+-   `lang` - either "en-US" or "en-GB"
+-   `path` - the path
+-   `text` - chr vector
+    
+:::
+
+
+
+## Root directory?? {auto-animate="true" auto-animate-easing="ease-in-out"}
+
+- Much like any file in R, each package that you save to your libraries within a working project directory has a stored path.
+
+The root directory is the top level folder where R saves your files when you later need a path to a certain object. 
+
+```{.r code-line-numbers="1|2"}
+find.package("gutenbergr")
+guten_path <- find.package("gutenbergr")
+```
+
+::: footer
+More information: [Working Directory](https://intro2r.com/work-d.html)
+:::
+
+## Vignettes {auto-animate="true"}
+
+Depending on the package, vignettes might exist as a long documentation showing an extensive guide to a certain package. Kind of like the R Tip of the Day presentations... 
+
+- You can check if a given package has one using the `browseVignettes()` function. 
+
+It looks something like this! 
+
+[browseVignettes("gutenbergr")](http://127.0.0.1:30065/session/Rvig.10c284f554e3c.html) 
+
+
+::: footer
+More information: [Vignettes ](https://r-pkgs.org/vignettes.html)
+:::
+
+## Package and Vignette Checking {auto-animate="true"}
+
+:::{style = "font-size: 120%;"}
+```r
+spell_check_package(pkg = guten_path, vignettes = TRUE)
+
+spell_check_setup(pkg = guten_path, vignettes = TRUE, lang = "en-US")
+```
+
+::: {.fragment .fade-up}
+```{r}
+spell_check_package(pkg = guten_path, vignettes = TRUE)
+```
+:::
+
+::: {.fragment .fade-up}
+```{r}
+spell_check_setup(pkg = guten_path, vignettes = TRUE, lang = "en-US")
+```
+:::
+
+:::
+
+## That's great, but how can *I* use it? {.smaller .scrollable transition="slide"}
+
+```r
+text_vec <- c("the", "quck", "brown", "jumped", "over", "the", "laziy", "dog")
+
+spell_check_text(text_vec, ignore = character(), lang =  "en_US")
+```
+::: {.fragment .fade-up}
+```{r}
+spell_check_text(text_vec, ignore = character(), lang =  "en_US")
+```
+:::
+
+::: {.fragment .fade-down}
+```r
+spell_check_text("I waint to truy aun appel", ignore = character(), lang = "en_US")
+```
+:::
+
+::: {.fragment .fade-up}
+```{r}
+spell_check_text("I waint to truy aun appel", ignore = character(), lang = "en_US")
+```
+:::
+
+::: {.fragment .fade-down}
+```r
+spell_check_text("The quick brown fox jumped over the lazy dog", ignore = character(), lang = "en_US")
+```
+:::
+
+::: {.fragment .fade-up}
+```{r}
+spell_check_text("The quick brown fox jumped over the lazy dog", ignore = character(), lang = "en_US")
+```
+:::
+
+## You can also read in text files... {.scrollable transition="fade"}
+
+```r
+saved_data <- "C:\\Users\\nkuns\\OneDrive\\Documents\\SDS_F26_Namgyal\\SDS264_F26\\r_tip_spell_files\\spellcheck_this.txt"
+```
+::: {.fragment .fade-up}
+```r
+spell_check_files(path = saved_data, ignore = character(), lang =  "en_US")
+```
+:::
+
+::: {.fragment .fade-up}
+```{r}
+spell_check_files(path = saved_data, ignore = character(), lang =  "en_US")
+```
+:::
+
+::: {.fragment .fade-down}
+```{r}
+spellcheck_this
+```
+:::
+
+## en-US? en-GB? {.smaller .scrollable transition="slide"}
+
+You may or may not have noticed that we've been specifying the language to be `en-US` so far. What happens if we change that?
+
+::: {.fragment .fade-down}
+```{r}
+us_words
+```
+:::
+
+::: {.fragment .fade-down}
+```r
+spell_check_text(us_words, ignore = character(), lang =  "en-GB")
+```
+:::
+
+::: {.fragment .fade-down}
+```{r}
+spell_check_text(us_words, ignore = character(), lang =  "en-GB")
+```
+:::
+
+::: {.fragment .fade-in}
+Compared to:
+:::
+
+::: {.fragment .fade-down}
+```r
+spell_check_text(us_words, ignore = character(), lang =  "en-US")
+```
+:::
+
+::: {.fragment .fade-down}
+```{r}
+spell_check_text(us_words, ignore = character(), lang =  "en-US")
+```
+:::
+
+::: {.fragment .fade-in}
+Interestingly (or not), R defaults `lang` to en-US. Removing it will give us the same result.
+:::
+
+::: {.fragment .fade-down}
+```r
+spell_check_text(us_words, ignore = character())
+```
+:::
+
+::: {.fragment .fade-down}
+```{r}
+spell_check_text(us_words, ignore = character())
+```
+:::
+
+
+
+## What if I want to add a new word? {.scrollable transition="zoom"}
+
+```r
+ex_string
+```
+::: {.fragment .fade-down}
+```{r}
+ex_string
+```
+:::
+::: {.fragment .fade-up}
+```{r}
+spell_check_text(ex_string, ignore = character(), lang = "en_US")
+```
+:::
+
+::: {.fragment .fade-down}
+```r
+spell_check_text(ex_string, ignore = c("Namgyal", "Kunsang"), lang = "en_US")
+```
+:::
+
+::: {.fragment .fade-up}
+```{r}
+spell_check_text(ex_string, ignore = c("Namgyal", "Kunsang"), lang = "en_US")
+```
+:::
+
+## Limitations (no package is perfect) {.scrollable transition="fade"}
+
+::: incremental
+
+-   Root directories are a pain to work with (and find)
+-   Focused primarily towards people who are writing R packages
+-   Only supports English
+-   Picky with dataframes
+    
+:::
