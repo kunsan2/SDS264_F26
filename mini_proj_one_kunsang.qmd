@@ -1,7 +1,7 @@
 ---
 title: "Mini Project 1: Lyrics Analysis"
 author: "Namgyal Kunsang"
-format: pdf
+format: html
 fig_caption: TRUE
 editor_options: 
   chunk_output_type: console
