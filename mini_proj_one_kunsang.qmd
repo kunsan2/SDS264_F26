@@ -1,7 +1,9 @@
 ---
 title: "Mini Project 1: Lyrics Analysis"
 author: "Namgyal Kunsang"
-format: html
+format: 
+  html:
+    code-overflow: wrap
 fig_caption: TRUE
 editor_options: 
   chunk_output_type: console
@@ -14,7 +16,7 @@ editor:
 
 Throughout history, music has been an essential part of human culture. Each generation of people have had their own sets of melodies and tunes that are invaluable for analyzing what the current values of a society are. A simple way to analyze these values is to take a look at the most popular styles of music at the time, and there's no better genre to do it with than pop. 
 
-Pop is known for appealing to the broadest audience, with the name of the genre likely being short for 'popular'. It came into the world sometime around the 1950s initially as rock music aimed at a more adolescent demographic, but it later transformed into the more fun, catchy, and marketable form we see today. 
+Pop is known for appealing to the broadest audience, with the name of the genre likely being short for 'popular'. It came into the world sometime around the 1950s initially as rock music aimed at a more adolescent demographic, but it later transformed into the more fun, catchy, and marketable form we see today [(Blanton, 2023)](https://www.musicgrotto.com/what-is-pop-music/). 
 
 Through using the `lyricsr` package developed by [Brian Walsh](https://github.com/bwalsh5/lyricsr.git), we can easily do text analyses for some of the most popular songs in the most popular genre all stored within the website [Genius](https://genius.com/). 
 
@@ -178,7 +180,7 @@ Well, that makes sense. 'Starboy' is the primary source for the staggering 172 '
 
 Let's now take a look at bigrams, which are pairs of 2 words next to each other. For example: in 'the quick brown fox', we would have 3 different bigrams of 'the quick', 'quick brown', and 'brown fox'. The amount of bigrams increases with the length of a given text. In order to look deeper into repetition within pop songs, bigrams are a useful tool.
 
-But something else we can do with bigrams is find the term frequency-inverse document frequency (tf-idf) of phrases (bigrams) for a given song. The 'tf-idf' is a complicated way of saying we want to calculate the most important bigrams for each songs. 
+But something else we can do with bigrams is find the term frequency-inverse document frequency (tf-idf) of phrases (bigrams) for a given song. The 'tf-idf' is a complicated way of saying we want to calculate the most important bigrams for each songs [(Geeks for Geeks, 2026)](https://www.geeksforgeeks.org/machine-learning/understanding-tf-idf-term-frequency-inverse-document-frequency/). 
 
 Looking at our tf-idf distibution across each song, we find...
 
@@ -244,8 +246,7 @@ From looking at the figure, 'Starboy' confirms our previous observation that 'ha
 
 ## Sentiment Trajectory 
 
-Finally, let's look at a sentiment trajectory of 4 songs within the pop songs list. For this case I chose 'Shape of You', 'Without Me', 'Bohemian Rhapsody', and 'God's Plan', which are the first 4 songs in the list of pop songs, excluding the Despacito Remix. The choice to exclude Despacito was because the sentiment dictionary (bing sentiments) is intended for English words, and a good portion of Despacito is in Spanish. It would not serve as a very useful comparison to the other 3 songs if it was included.
-
+Finally, let's look at a sentiment trajectory of 4 songs within the pop songs list. For this case I chose 'Shape of You', 'Without Me', 'Bohemian Rhapsody', and 'God's Plan', which are the first 4 songs in the list of pop songs, excluding the Despacito Remix. The choice to exclude Despacito was because the sentiment dictionary (bing sentiments) is intended for English words, and a good portion of Despacito is in Spanish [(Package Documentation)](https://search.r-project.org/CRAN/refmans/textdata/html/lexicon_bing.html). It would not serve as a very useful comparison to the other 3 songs if it was included.
 That being said, by categorizing each word of the song into positive and negative groups depending on how they are labeled in the sentiment dictionary, we find that... 
 
 ```{r}
