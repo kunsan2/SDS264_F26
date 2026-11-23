@@ -11,3 +11,6 @@ Encoding: UTF-8
 
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
+
+BuildType: Website
+WebsitePath: ~/SDS_F26_Namgyal/SDS264_F26/kunsan2.github.io

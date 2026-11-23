@@ -1,0 +1,20 @@
+---
+title: "Namgyal Kunsang"
+image: media/RKS_custom_render_2025-09-18T17_54_57.826Z.png
+about:
+  template: trestles
+  image-shape: round
+  image-width: 17em
+  links:
+    - text: GitHub
+      href: https://github.com/kunsan2/SDS264_F26
+      target: _blank
+    - text: Email
+      href: mailto:namgyalkunsang06@gmail.com
+---
+
+Hello, I'm Namgyal Kunsang! Currently, I'm a junior at St. Olaf College and I'm studying Statistics, Environmental Studies, and Mathematical Biology (oops, that's a lot of things)! This is my first Quarto website.
+
+
+
+To learn more about Quarto websites visit <https://quarto.org/docs/websites>.

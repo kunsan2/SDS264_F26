@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "kunsan2.github.io"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+      - mini_proj_one_kunsang.qmd
+
+format:
+  html:
+    theme:
+      light: cerulean
+      dark: vapor
+    css: styles.css
+    toc: true
+
+
+
