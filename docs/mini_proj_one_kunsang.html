@@ -45,9 +45,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-eb99b75fe776fd11c81530f7e94a1763.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-c65eef156a02954c7572e454c6e27155.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-eb99b75fe776fd11c81530f7e94a1763.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-bd8fb8cdcf72448f6571eb0073f93a9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-241ec2dedde16255227a5b6ce3de3b90.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-bd8fb8cdcf72448f6571eb0073f93a9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -271,6 +271,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link active" href="./mini_proj_one_kunsang.html" aria-current="page"> 
 <span class="menu-text">Mini Project 1: Lyrics Analysis</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./choropleths.html"> 
+<span class="menu-text">Choropleth Maps</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -280,7 +284,7 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -302,7 +306,7 @@ ul.task-list li input[type="checkbox"] {
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -312,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     <div>
     <div class="quarto-title-meta-heading">Author</div>
@@ -333,7 +337,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="pop-songs-a-glance-into-mainstream-culture" class="level1">
 <h1>Pop Songs: A Glance into Mainstream Culture</h1>
 <p>Throughout history, music has been an essential part of human culture. Each generation of people have had their own sets of melodies and tunes that are invaluable for analyzing what the current values of a society are. A simple way to analyze these values is to take a look at the most popular styles of music at the time, and there’s no better genre to do it with than pop.</p>
-<p>Pop is known for appealing to the broadest audience, with the name of the genre likely being short for ‘popular’. It came into the world sometime around the 1950s initially as rock music aimed at a more adolescent demographic, but it later transformed into the more fun, catchy, and marketable form we see today.</p>
+<p>Pop is known for appealing to the broadest audience, with the name of the genre likely being short for ‘popular’. It came into the world sometime around the 1950s initially as rock music aimed at a more adolescent demographic, but it later transformed into the more fun, catchy, and marketable form we see today <a href="https://www.musicgrotto.com/what-is-pop-music/">(Blanton, 2023)</a>.</p>
 <p>Through using the <code>lyricsr</code> package developed by <a href="https://github.com/bwalsh5/lyricsr.git">Brian Walsh</a>, we can easily do text analyses for some of the most popular songs in the most popular genre all stored within the website <a href="https://genius.com/">Genius</a>.</p>
 <section id="our-20-songs" class="level2">
 <h2 class="anchored" data-anchor-id="our-20-songs">Our 20 Songs</h2>
@@ -434,7 +438,7 @@ Done. Found 20 songs.</code></pre>
 <section id="bigrams-and-term-frequency-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="bigrams-and-term-frequency-distribution">Bigrams and Term Frequency Distribution</h2>
 <p>Let’s now take a look at bigrams, which are pairs of 2 words next to each other. For example: in ‘the quick brown fox’, we would have 3 different bigrams of ‘the quick’, ‘quick brown’, and ‘brown fox’. The amount of bigrams increases with the length of a given text. In order to look deeper into repetition within pop songs, bigrams are a useful tool.</p>
-<p>But something else we can do with bigrams is find the term frequency-inverse document frequency (tf-idf) of phrases (bigrams) for a given song. The ‘tf-idf’ is a complicated way of saying we want to calculate the most important bigrams for each songs.</p>
+<p>But something else we can do with bigrams is find the term frequency-inverse document frequency (tf-idf) of phrases (bigrams) for a given song. The ‘tf-idf’ is a complicated way of saying we want to calculate the most important bigrams for each songs <a href="https://www.geeksforgeeks.org/machine-learning/understanding-tf-idf-term-frequency-inverse-document-frequency/">(Geeks for Geeks, 2026)</a>.</p>
 <p>Looking at our tf-idf distibution across each song, we find…</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -450,8 +454,7 @@ Done. Found 20 songs.</code></pre>
 </section>
 <section id="sentiment-trajectory" class="level2">
 <h2 class="anchored" data-anchor-id="sentiment-trajectory">Sentiment Trajectory</h2>
-<p>Finally, let’s look at a sentiment trajectory of 4 songs within the pop songs list. For this case I chose ‘Shape of You’, ‘Without Me’, ‘Bohemian Rhapsody’, and ‘God’s Plan’, which are the first 4 songs in the list of pop songs, excluding the Despacito Remix. The choice to exclude Despacito was because the sentiment dictionary (bing sentiments) is intended for English words, and a good portion of Despacito is in Spanish. It would not serve as a very useful comparison to the other 3 songs if it was included.</p>
-<p>That being said, by categorizing each word of the song into positive and negative groups depending on how they are labeled in the sentiment dictionary, we find that…</p>
+<p>Finally, let’s look at a sentiment trajectory of 4 songs within the pop songs list. For this case I chose ‘Shape of You’, ‘Without Me’, ‘Bohemian Rhapsody’, and ‘God’s Plan’, which are the first 4 songs in the list of pop songs, excluding the Despacito Remix. The choice to exclude Despacito was because the sentiment dictionary (bing sentiments) is intended for English words, and a good portion of Despacito is in Spanish <a href="https://search.r-project.org/CRAN/refmans/textdata/html/lexicon_bing.html">(Package Documentation)</a>. It would not serve as a very useful comparison to the other 3 songs if it was included. That being said, by categorizing each word of the song into positive and negative groups depending on how they are labeled in the sentiment dictionary, we find that…</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">

@@ -1,5 +1,14 @@
 ---
-title: "choropleths"
-format: html
+title: "Choropleth Maps"
+author: "Namgyal Kunsang"
+format: 
+  html:
+    code-overflow: wrap
+fig_caption: TRUE
+editor_options: 
+  chunk_output_type: console
+editor: 
+  markdown: 
+    wrap: 72
 ---
 

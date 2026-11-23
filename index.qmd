@@ -1,6 +1,7 @@
 ---
 title: "Namgyal Kunsang"
 image: media/RKS_custom_render_2025-09-18T17_54_57.826Z.png
+toc: false
 about:
   template: trestles
   image-shape: round
@@ -15,6 +16,13 @@ about:
 
 Hello, I'm Namgyal Kunsang! Currently, I'm a junior at St. Olaf College and I'm studying Statistics, Environmental Studies, and Mathematical Biology (oops, that's a lot of things)! This is my first Quarto website.
 
+I made the mii render in my image to the left using [this website](https://mii.nxw.pw/)! Maybe I'll update it someday with a professional headshot, but I think the mii-creation of myself is pretty accurate. 
+
+## Cool Top-Secret Information:
+- My favorite animals are manta rays!
+- I'm left handed!
+- I have over 300 hours logged into Pokemon games.
+- I like drawing!
 
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+
