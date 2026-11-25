@@ -12,3 +12,132 @@ editor:
     wrap: 72
 ---
 
+```{r}
+#| message: FALSE
+#| include: FALSE
+#| warning: FALSE
+
+library(tidyverse)  #<1>
+library(mdsr)      #<2>
+library(sf)
+library(leaflet)
+library(maps)
+library(viridis)
+library(ggthemes)
+
+library(htmltools)
+library(glue)
+
+library(usdata)
+library(usa)
+
+states <- read_sf("https://rstudio.github.io/leaflet/json/us-states.geojson") 
+```
+
+1. fkflnrr
+2. klfn
+
+```{r}
+#| include: FALSE
+#| message: FALSE
+us_states <- map_data("state")
+head(us_states)
+
+us_states <- us_states |>
+  mutate(state = region) |>
+  select(7, 1, 2, 3, 4)
+
+state_data <- as_tibble(usdata::state_stats) |>
+  select(state, murder) |> 
+  mutate(state = str_to_lower(state))
+
+merged_num <- us_states |>
+  left_join(state_data, by = "state")
+
+states_sf <- 
+  read_sf("https://rstudio.github.io/leaflet/json/us-states.geojson") |>
+  select(name, geometry) |>
+  filter(name != "Puerto Rico") |>
+  mutate(state = name) |>
+  mutate(state = str_to_lower(state)) |>
+  select(3, 2)
+```
+
+```{r}
+#| message: FALSE
+#| echo: FALSE
+
+full_num_sf <- merged_num |>
+  left_join(states_sf) |>
+  filter(state != "district of columbia")
+
+full_num_sf |>
+  ggplot(mapping = aes(x = long, y = lat, group = group)) + 
+    geom_polygon(aes(fill = murder), color = "black") + 
+    labs(fill = "Murders per 100,000 people", 
+         caption = "Data sourced from Census Quick Facts.", 
+         x = "Longitude",
+         y = "Latitude",
+         title = "Murder Rates across the United States",
+         subtitle = "As estimated in 2020") +
+    coord_map() +
+  scale_fill_distiller(palette = "PuRd", 
+                       direction = 1,
+                       breaks= c(1.5, 3.5, 5.5, 7.5, 9.5)
+  ) + 
+  theme_calc()
+```
+
+```{r}
+#| message: FALSE
+#| include: FALSE
+states_num <- states |>
+  mutate(name = str_to_lower(name),
+         state = name) |>
+  left_join(merged_num) |>
+  select(id, state, murder, geometry, long, lat) |>
+  filter(state != "puerto rico", state != "district of columbia")
+```
+
+
+```{r}
+#| warning: FALSE
+#| message: FALSE
+#| echo: FALSE
+
+bins_num <- c(1, 3.5, 5.5, 7.5, 9.5, Inf)
+pal_num <- colorBin("PuRd", domain = states_num$murder, bins = bins_num)
+
+# Create labels that pop up when we hover over a state.  The labels must
+#   be part of a list where each entry is tagged as HTML code.
+
+
+states_num <- states_num |>
+  mutate(labels = str_c(state, ": ", murder, " murders / 100k people"))
+
+labels <- lapply(states_num$labels, HTML)
+
+leaflet(states_num) |>
+  setView(-96, 37.8, 4) |>
+  addTiles() |>
+  addPolygons(
+    fillColor = ~pal_num(murder),
+    weight = 2,
+    opacity = 1,
+    color = "white",
+    dashArray = "3",
+    fillOpacity = 0.7,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "#666",
+      dashArray = "",
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    label = labels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) |>
+  addLegend(pal = pal_num, values = ~murder, opacity = 0.7, title = NULL,
+    position = "bottomright")
+```

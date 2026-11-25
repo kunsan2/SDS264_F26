@@ -3,8 +3,10 @@ project:
   output-dir: docs
 
 website:
+  favicon: media/logo.png
   title: "kunsan2.github.io"
   navbar:
+    logo: media/logo.png
     left:
       - href: index.qmd
         text: Home
